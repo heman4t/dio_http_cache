@@ -5,7 +5,7 @@ typedef Future<List<int>> Decrypt(List<int> str);
 
 class CacheConfig {
   final Duration defaultMaxAge;
-  final Duration defaultMaxStale;
+  final Duration? defaultMaxStale;
   final String databasePath;
   final String databaseName;
   final String baseUrl;
@@ -16,21 +16,21 @@ class CacheConfig {
 
   final int maxMemoryCacheCount;
 
-  final Encrypt encrypt;
-  final Decrypt decrypt;
+  final Encrypt? encrypt;
+  final Decrypt? decrypt;
   final ICacheStore? diskStore;
 
   CacheConfig(
       {this.defaultMaxAge = const Duration(days: 7),
-      required this.defaultMaxStale,
+      this.defaultMaxStale,
       this.defaultRequestMethod = "POST",
-      required this.databasePath,
+      this.databasePath = "",
       this.databaseName = "DioCache",
       required this.baseUrl,
       this.skipDiskCache = false,
       this.skipMemoryCache = false,
       this.maxMemoryCacheCount = 100,
-      required this.encrypt,
-      required this.decrypt,
-      required this.diskStore});
+      this.encrypt,
+      this.decrypt,
+      this.diskStore});
 }
