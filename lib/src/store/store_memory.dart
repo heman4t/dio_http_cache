@@ -49,7 +49,7 @@ class MemoryCacheStore extends ICacheStore {
 
   _storeKey(CacheObj obj) {
     List<String> subKeyList = _keys[obj.key] ?? [];
-    subKeyList.add(obj.subKey ?? "");
+    subKeyList.add(obj.subKey);
     _keys[obj.key] = subKeyList;
   }
 

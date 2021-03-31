@@ -17,7 +17,7 @@ const DIO_CACHE_HEADER_KEY_DATA_SOURCE = "dio_cache_header_key_data_source";
 typedef _ParseHeadCallback = void Function(
   Duration _maxAge,
   Duration _maxStale,
-    );
+);
 
 class DioCacheManager {
   late CacheManager _manager;
@@ -40,41 +40,41 @@ class DioCacheManager {
     return _interceptor!;
   }
 
-  _onRequest(RequestOptions options,
-      RequestInterceptorHandler interceptorHandler) async {
-    if ((options.extra[DIO_CACHE_KEY_TRY_CACHE] ?? false) != true) {
-      return options;
+  _onRequest(
+      RequestOptions requestOptions, RequestInterceptorHandler handler) async {
+    if ((requestOptions.extra[DIO_CACHE_KEY_TRY_CACHE] ?? false) != true) {
+      return handler.next(requestOptions);
     }
-    if (true == options.extra[DIO_CACHE_KEY_FORCE_REFRESH]) {
-      return options;
+    if (true == requestOptions.extra[DIO_CACHE_KEY_FORCE_REFRESH]) {
+      return handler.next(requestOptions);
     }
-    var responseDataFromCache = await _pullFromCacheBeforeMaxAge(options);
+    var responseDataFromCache =
+        await _pullFromCacheBeforeMaxAge(requestOptions);
     if (null != responseDataFromCache) {
-      return _buildResponse(
-          responseDataFromCache, responseDataFromCache.statusCode, options);
+      return handler.resolve(_buildResponse(responseDataFromCache,
+          responseDataFromCache.statusCode, requestOptions));
     }
-    return options;
+    return handler.next(requestOptions);
   }
 
-  _onResponse(
-      Response response, ResponseInterceptorHandler interceptorHandler) async {
+  _onResponse(Response response, ResponseInterceptorHandler handler) async {
     if ((response.extra[DIO_CACHE_KEY_TRY_CACHE] ?? false) == true &&
         (response.statusCode ?? 100) >= 200 &&
         (response.statusCode ?? 301) < 300) {
       await _pushToCache(response);
     }
-    return response;
+    return handler.next(response);
   }
 
-  _onError(DioError e, ErrorInterceptorHandler interceptorHandler) async {
+  _onError(DioError e, ErrorInterceptorHandler handler) async {
     if ((e.requestOptions.extra[DIO_CACHE_KEY_TRY_CACHE] ?? false) == true) {
       var responseDataFromCache =
           await _pullFromCacheBeforeMaxStale(e.requestOptions);
       if (null != responseDataFromCache)
-        return _buildResponse(responseDataFromCache,
-            responseDataFromCache.statusCode, e.requestOptions);
+        return handler.resolve(_buildResponse(responseDataFromCache,
+            responseDataFromCache.statusCode, e.requestOptions));
     }
-    return e;
+    return handler.next(e);
   }
 
   Response _buildResponse(
@@ -99,7 +99,8 @@ class DioCacheManager {
         data: data,
         headers: headers,
         extra: options.extra..remove(DIO_CACHE_KEY_TRY_CACHE),
-        statusCode: statusCode, requestOptions: options);
+        statusCode: statusCode,
+        requestOptions: options);
   }
 
   Future<CacheObj?> _pullFromCacheBeforeMaxAge(RequestOptions options) {
@@ -182,7 +183,8 @@ class DioCacheManager {
     callback(_maxAge!, maxStale!);
   }
 
-  Duration? _tryGetDurationFromMap(Map<String, String>? parameters, String key) {
+  Duration? _tryGetDurationFromMap(
+      Map<String, String>? parameters, String key) {
     if (null != parameters && parameters.containsKey(key)) {
       var value = int.tryParse(parameters[key]!);
       if (null != value && value >= 0) {
@@ -240,7 +242,9 @@ class DioCacheManager {
           {String? requestMethod, String subKey = "", dynamic data}) =>
       delete(_getPrimaryKeyFromUri(uri),
           requestMethod: requestMethod,
-          subKey: (subKey.isNotEmpty) ? subKey : _getSubKeyFromUri(uri, data: data));
+          subKey: (subKey.isNotEmpty)
+              ? subKey
+              : _getSubKeyFromUri(uri, data: data));
 
   Future<bool> deleteByPrimaryKeyAndSubKey(String path,
           {String? requestMethod,
