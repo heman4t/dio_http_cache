@@ -4,19 +4,18 @@ version: 0.2.18
 homepage: https://mohesu.com
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
-  flutter: ">=2.0.0"
+  sdk: ">=2.13.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  quiver: ^3.0.0
-  json_serializable: ^4.0.0
-  json_annotation: ^4.0.0
-  dio: ^4.0.0
-  sqflite: ^2.0.0
-  path: ^1.8.0
-  crypto: ^3.0.0
+  quiver:
+  json_serializable:
+  json_annotation:
+  dio:
+  sqflite:
+  path:
+  crypto:
 
 dev_dependencies:
   flutter_test:
