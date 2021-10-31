@@ -12,7 +12,7 @@ CacheObj _$CacheObjFromJson(Map json) {
     (json['content'])?.map<int>((e) => e as int)?.toList(),
     subKey: json['subKey'] as String,
     statusCode: json['statusCode'] as int,
-    headers: (json['headers'])?.map((e) => e as int)?.toList(),
+    headers: (json['headers'])?.map<int>((e) => e as int)?.toList(),
   )
     ..maxAgeDate = json['max_age_date'] as int
     ..maxStaleDate = json['max_stale_date'] as int;
