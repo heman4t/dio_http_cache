@@ -9,7 +9,7 @@ part of 'obj.dart';
 CacheObj _$CacheObjFromJson(Map json) {
   return CacheObj(
     json['key'] as String,
-    (json['content'])?.map((e) => e as int)?.toList(),
+    (json['content'])?.map<int>((e) => e as int)?.toList(),
     subKey: json['subKey'] as String,
     statusCode: json['statusCode'] as int,
     headers: (json['headers'])?.map((e) => e as int)?.toList(),
